@@ -5,7 +5,9 @@ import android.media.ExifInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -18,6 +20,12 @@ import com.squareup.picasso.Picasso
 import it.shu2019.stopdesertification.entities.MarkerData
 import it.shu2019.stopdesertification.services.MapService
 import java.util.*
+import android.widget.LinearLayout
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.cardview.view.*
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -47,6 +55,34 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         currentUser?:signIn()
         FABClickManager()
 
+        val list = ArrayList<String>()
+        val listUsers = arrayOf(
+            "Google",
+            "Apple",
+            "Microsoft",
+            "Asus",
+            "Zenpone",
+            "Acer"
+        )
+
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        for (i in 0 until listUsers.size){
+
+            list.add(listUsers.get(i))
+
+            if(listUsers.size - 1 == i){
+                // init adapter yang telah dibuat tadi
+                val adapter = Adapter(list)
+                adapter.notifyDataSetChanged()
+
+                //tampilkan data dalam recycler view
+                recyclerView.adapter = adapter
+            }
+
+        }
+
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -57,6 +93,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //        mapService?.addGreenMarker(LatLng(23.777176, 92.399458), "Test");
 //        mapService?.addRedMarker(LatLng(21.777176, 91.399444), "Test");
 //        mapService?.addYellowMarker(LatLng(26.777168, 93.399452), "Test");
+
+
+//        val cards = findViewById(R.id.cards) as LinearLayout
+//
+//        val view1: CardView = LayoutInflater.from(this).inflate(R.layout.cardview, cards) as CardView
+//        val view2: CardView = LayoutInflater.from(this).inflate(R.layout.cardview, cards) as CardView
+
+
+//        view1.test.text = "Card1"
+//        view1.width
+//        view2.test.text = "Card2"
+
+//        cards.addView(view1)
+//        cards.addView(view2);
 
     }
 
@@ -116,4 +166,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     Log.e("Error",task.exception.toString())
             }
     }
+}
+
+class Adapter(private val list:ArrayList<String>) : RecyclerView.Adapter<Adapter.Holder>(){
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+        return Holder(LayoutInflater.from(parent.context).inflate(R.layout.cardview,parent,false))
+    }
+
+    override fun getItemCount(): Int = list?.size
+
+    override fun onBindViewHolder(holder: Holder, position: Int) {
+
+        holder.view.test.text = list?.get(position)
+    }
+
+    class Holder(val view: View) : RecyclerView.ViewHolder(view)
+
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+        <androidx.cardview.widget.CardView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="250dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:padding="2dp"
+                android:background="@color/card_color">
+            <ImageView android:layout_width="match_parent" android:layout_height="match_parent"/>
+            <TextView android:id="@+id/test" android:layout_width="match_parent" android:layout_height="match_parent"/>
+        </androidx.cardview.widget.CardView>
