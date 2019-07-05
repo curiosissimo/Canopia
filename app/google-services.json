@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1061183538303",
+    "firebase_url": "https://stop-desertification.firebaseio.com",
+    "project_id": "stop-desertification",
+    "storage_bucket": "stop-desertification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061183538303:android:82c780328a55f8bb",
+        "android_client_info": {
+          "package_name": "it.shu2019.stopdesertification"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1061183538303-4gn1hs9ndmvfcqqh07uei6i3p2n2iib4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAz0TN9IA8wF3o9oj9nUF_N-hwikqK_xU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1061183538303-4gn1hs9ndmvfcqqh07uei6i3p2n2iib4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
