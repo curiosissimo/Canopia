@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:orientation="vertical"
+>
+    <ImageView android:id="@+id/taken_picture" android:layout_width="match_parent" android:layout_height="220dp"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+        <Button
+                android:id="@+id/take_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="4dp"
+                android:text="Take a picture" />
+
+        <Button
+                android:id="@+id/open_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_alignParentRight="true"
+                android:text="Open gallery" />
+    </LinearLayout>
+    <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Title"
+        android:id="@+id/markerTitle"
+
+    />
+    <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:hint="Description"
+              android:lines="5"
+              android:id="@+id/markerDescription"
+    />
+    <Button
+            android:id="@+id/save_marker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentRight="true"
+            android:text="Save" />
+
+</LinearLayout>
