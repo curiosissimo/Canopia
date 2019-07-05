@@ -18,7 +18,9 @@ import android.content.Context
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
+import android.widget.EditText
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_create.view.*
 import java.io.ByteArrayOutputStream
 
 
@@ -37,6 +39,22 @@ class CreateActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create)
+
+        val imageView: ImageView = findViewById(R.id.taken_picture)
+        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_camera_enhance_black_24dp))
+
+        val saveMarkerBtn: Button = findViewById(R.id.save_marker)
+        saveMarkerBtn.setOnClickListener {
+            val titleTxt: EditText = findViewById(R.id.markerTitle)
+            val descTxt: EditText = findViewById(R.id.markerDescription)
+            val output = Intent()
+            output.putExtra("title", titleTxt.text)
+            output.putExtra("description", descTxt.text)
+            output.putExtra("imageUri", fileUri)
+            setResult(1, output)
+            finish()
+        }
+
 
         val takePictureBtn: Button = findViewById(R.id.take_picture)
         takePictureBtn.setOnClickListener {

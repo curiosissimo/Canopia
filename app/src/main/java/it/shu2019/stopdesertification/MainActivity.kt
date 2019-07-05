@@ -1,10 +1,12 @@
 package it.shu2019.stopdesertification
 
 import android.content.Intent
+import android.media.ExifInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.firebase.FirebaseApp
@@ -12,6 +14,7 @@ import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.squareup.picasso.Picasso
 import it.shu2019.stopdesertification.services.MapService
 
 
@@ -60,7 +63,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             val intent = Intent(this, CreateActivity::class.java).apply {
 //                putExtra(EXTRA_MESSAGE, message)
             }
-            startActivity(intent)
+            startActivityForResult(intent, 1)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == 1 && resultCode == 1 && mapService != null) {
+            mapService?.addYellowMarker(mapService?.getLocation() ?: return, data?.extras?.get("title").toString());
         }
     }
 

@@ -15,6 +15,13 @@ class MapService(val map: GoogleMap?) {
 
     }
 
+    fun getLocation(): LatLng {
+        if (map !== null) {
+            return LatLng(map.cameraPosition.target.latitude, map.cameraPosition.target.longitude)
+        }
+        return LatLng(0.0, 0.0)
+    }
+
     fun addYellowMarker(coords: LatLng, title: String) {
         val options: MarkerOptions = MarkerOptions()
             .position(coords)
