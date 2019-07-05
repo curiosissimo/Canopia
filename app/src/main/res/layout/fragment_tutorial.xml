@@ -1,13 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".TutorialFragment">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   tools:context=".TutorialFragment"
+android:background="@drawable/test">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+            android:src="@drawable/camel"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/camel"
+            app:layout_constraintStart_toEndOf="@+id/pyramid"
+            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="24dp" app:layout_constraintTop_toBottomOf="@+id/textView"/>
+    <ImageView
+            android:src="@drawable/pyramid"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/pyramid"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/camel" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            android:layout_margin="24dp"/>
+    <ImageView
+            android:src="@drawable/desert"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/desert"
+            app:layout_constraintStart_toEndOf="@+id/desert_2"
+            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="24dp"/>
+    <ImageView
+            android:src="@drawable/desert_2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/desert_2"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/desert"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="24dp"/>
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"/>
-</FrameLayout>
+            android:text="Stop the desert!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView" android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="24dp"/>
+    <TextView
+            android:gravity="center"
+            android:text="BlablablablablaBlablablablablaBlablablablablaBlablablablablaBlablablablablaBlablablablablaBlablablablablaBlablablablablaBlablablablabla"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView3" android:textSize="20sp"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/textView"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent" android:textColor="#000000"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

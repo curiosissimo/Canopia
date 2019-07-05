@@ -8,17 +8,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.*
+import kotlinx.android.synthetic.main.fragment_tutorial.*
 
 private const val ARG_PARAM1 = "param1"
 
 class TutorialFragment : Fragment() {
 
-    private var idMenu: Int? = null
+    private var position: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            idMenu = it.getInt(ARG_PARAM1)
+            position = it.getInt(ARG_PARAM1)
         }
     }
 
@@ -26,21 +28,31 @@ class TutorialFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var idLayout = 0
-        when(idMenu){
-            R.id.navigation_A-> idLayout = R.layout.fragment_tutorial
-            R.id.navigation_B-> idLayout = R.layout.fragment_tutorial
-            R.id.navigation_C-> idLayout = R.layout.fragment_tutorial_2
+        var idLayout =  R.layout.fragment_tutorial
+        when(position){
+            0-> idLayout = R.layout.fragment_tutorial
+            1-> idLayout = R.layout.fragment_tutorial_2
+            2-> idLayout = R.layout.fragment_tutorial_3
         }
         return inflater.inflate(idLayout, container, false)
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val anim = AlphaAnimation(0.0f, 1.0f)
+        anim.setDuration(500)
+        anim.setStartOffset(100)
+        anim.setRepeatMode(Animation.REVERSE)
+        anim.setRepeatCount(Animation.INFINITE)
+        textView?.startAnimation(anim)
+    }
+
     companion object {
         @JvmStatic
-        fun newInstance(idMenu: Int) =
+        fun newInstance(position: Int) =
             TutorialFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_PARAM1, idMenu)
+                    putInt(ARG_PARAM1, position)
                 }
             }
     }
