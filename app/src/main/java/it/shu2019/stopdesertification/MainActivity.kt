@@ -1,8 +1,10 @@
 package it.shu2019.stopdesertification
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.firebase.FirebaseApp
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
         val currentUser = mAuth.currentUser
         currentUser?:signIn()
+        FABClickManager()
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -51,6 +54,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+    fun FABClickManager() {
+        val fab: View = findViewById(R.id.fab)
+        fab.setOnClickListener { view ->
+            val intent = Intent(this, CreateActivity::class.java).apply {
+//                putExtra(EXTRA_MESSAGE, message)
+            }
+            startActivity(intent)
+        }
+    }
 
     fun signIn(){
 
