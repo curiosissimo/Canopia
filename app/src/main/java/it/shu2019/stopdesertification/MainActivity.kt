@@ -2,6 +2,7 @@ package it.shu2019.stopdesertification
 
 import android.content.Intent
 import android.media.ExifInterface
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -27,6 +28,8 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.cardview.view.*
 
+val list = ArrayList<String>()
+val adapter = Adapter(list)
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mMap: GoogleMap? = null
@@ -55,33 +58,32 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         currentUser?:signIn()
         FABClickManager()
 
-        val list = ArrayList<String>()
-        val listUsers = arrayOf(
-            "Google",
-            "Apple",
-            "Microsoft",
-            "Asus",
-            "Zenpone",
-            "Acer"
-        )
+//        val listUsers = arrayOf(
+//            "Google",
+//            "Apple",
+//            "Microsoft",
+//            "Asus",
+//            "Zenpone",
+//            "Acer"
+//        )
 
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        for (i in 0 until listUsers.size){
+        recyclerView.adapter = adapter
 
-            list.add(listUsers.get(i))
-
-            if(listUsers.size - 1 == i){
-                // init adapter yang telah dibuat tadi
-                val adapter = Adapter(list)
-                adapter.notifyDataSetChanged()
-
-                //tampilkan data dalam recycler view
-                recyclerView.adapter = adapter
-            }
-
-        }
+//        for (i in 0 until listUsers.size){
+//
+//            list.add(listUsers.get(i))
+//
+//            if(listUsers.size - 1 == i){
+//                // init adapter yang telah dibuat tadi
+//                val adapter = Adapter(list)
+//
+//                //tampilkan data dalam recycler view
+//            }
+//
+//        }
 
     }
 
@@ -130,6 +132,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 mapService?.getLocation()!!
             )
 
+            addPicture(data?.extras?.get("imageUri").toString());
+
             mapService?.addYellowMarker(marker, GoogleMap.OnInfoWindowClickListener {
                 var marker: MarkerData? = mapService?.getMarkerById(it.tag.toString())
                 if (marker != null) {
@@ -138,12 +142,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         putExtra("description", marker.description)
                         putExtra("imageUri", marker.imageUri)
                     }
-                    Log.e("INTENT", intent.extras.get("title").toString())
-                    Log.e("INTENT", intent.extras.get("imageUri").toString())
                     startActivity(intent)
                 }
             })
         }
+    }
+
+    fun addPicture(imageUri: String) {
+        list.add(imageUri)
+        adapter.notifyDataSetChanged()
     }
 
     fun signIn(){
@@ -178,7 +185,7 @@ class Adapter(private val list:ArrayList<String>) : RecyclerView.Adapter<Adapter
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
 
-        holder.view.test.text = list?.get(position)
+        holder.view.image.setImageURI(Uri.parse(list.get(position)))
     }
 
     class Holder(val view: View) : RecyclerView.ViewHolder(view)
