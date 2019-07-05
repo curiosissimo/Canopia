@@ -13,9 +13,8 @@
         </activity>
         <activity
                 android:name=".DetailActivity"
-                android:label="Nome Activity"
-                android:theme="@style/NoActionBar">
-            android:theme="@style/AppTheme">
+                android:theme="@style/Theme.AppCompat.NoActionBar">
+        </activity>
         <activity android:name=".CreateActivity">
         </activity>
 
@@ -35,6 +34,7 @@
         <activity
                 android:name=".TutorialActivity"
                 android:theme="@style/AppTheme.FullScreen">
+
         </activity>
     </application>
     <uses-feature android:name="android.hardware.camera"

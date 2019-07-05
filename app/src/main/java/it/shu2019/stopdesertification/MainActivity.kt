@@ -15,7 +15,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.squareup.picasso.Picasso
+import it.shu2019.stopdesertification.entities.MarkerData
 import it.shu2019.stopdesertification.services.MapService
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -44,22 +46,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val currentUser = mAuth.currentUser
         currentUser?:signIn()
         FABClickManager()
+
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         mMap = googleMap
         mapService = MapService(googleMap)
 
-        mapService?.addBlueMarker(LatLng(22.777170, 90.399452), "Test")
-        mapService?.addGreenMarker(LatLng(23.777176, 92.399458), "Test");
-        mapService?.addRedMarker(LatLng(21.777176, 91.399444), "Test");
-        mapService?.addYellowMarker(LatLng(26.777168, 93.399452), "Test");
+//        mapService?.addBlueMarker(LatLng(22.777170, 90.399452), "Test")
+//        mapService?.addGreenMarker(LatLng(23.777176, 92.399458), "Test");
+//        mapService?.addRedMarker(LatLng(21.777176, 91.399444), "Test");
+//        mapService?.addYellowMarker(LatLng(26.777168, 93.399452), "Test");
 
     }
 
     fun FABClickManager() {
         val fab: View = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener { _ ->
             val intent = Intent(this, CreateActivity::class.java).apply {
 //                putExtra(EXTRA_MESSAGE, message)
             }
@@ -69,7 +72,27 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == 1 && resultCode == 1 && mapService != null) {
-            mapService?.addYellowMarker(mapService?.getLocation() ?: return, data?.extras?.get("title").toString());
+            val marker = MarkerData(
+                UUID.randomUUID().toString(),
+                data?.extras?.get("title").toString(),
+                data?.extras?.get("description").toString(),
+                data?.extras?.get("imageUri").toString(),
+                mapService?.getLocation()!!
+            )
+
+            mapService?.addYellowMarker(marker, GoogleMap.OnInfoWindowClickListener {
+                var marker: MarkerData? = mapService?.getMarkerById(it.tag.toString())
+                if (marker != null) {
+                    val intent = Intent(this, DetailActivity::class.java).apply {
+                        putExtra("title", marker.title)
+                        putExtra("description", marker.description)
+                        putExtra("imageUri", marker.imageUri)
+                    }
+                    Log.e("INTENT", intent.extras.get("title").toString())
+                    Log.e("INTENT", intent.extras.get("imageUri").toString())
+                    startActivity(intent)
+                }
+            })
         }
     }
 

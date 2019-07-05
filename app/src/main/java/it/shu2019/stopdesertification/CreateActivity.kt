@@ -178,6 +178,7 @@ class CreateActivity : AppCompatActivity() {
         } else if (requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK) {
             val imageView: ImageView = findViewById(R.id.taken_picture)
             imageView.setImageURI(data?.data)
+            fileUri = data?.data;
         }
     }
 
