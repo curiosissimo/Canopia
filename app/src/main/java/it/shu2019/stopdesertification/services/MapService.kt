@@ -13,6 +13,10 @@ import kotlin.collections.ArrayList
 
 class MapService(val map: GoogleMap?) {
 
+    init {
+        map?.getUiSettings()?.setMapToolbarEnabled(false)
+    }
+
     val markers: ArrayList<MarkerData> = arrayListOf()
 
     fun setCenter(coords: LatLng) {
