@@ -56,6 +56,8 @@ class MapService(val map: GoogleMap?, val context: Context) {
         addMarker(marker.id, options, callback)
     }
 
+
+
     fun getBitmap(marker: MarkerData, width: Int, height: Int):Bitmap{
         var id = R.drawable.ic_good
         when(marker.category){

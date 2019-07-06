@@ -31,7 +31,7 @@ class DetailActivity : AppCompatActivity() {
         setSupportActionBar(detail_toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Inserito tra i preferiti", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "Aggiunto ai preferiti", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
 
