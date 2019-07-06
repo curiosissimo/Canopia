@@ -1,6 +1,7 @@
 package it.shu2019.stopdesertification
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -10,18 +11,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.*
 import kotlinx.android.synthetic.main.fragment_tutorial.*
+import kotlinx.android.synthetic.main.fragment_tutorial_3.*
 
 private const val ARG_PARAM1 = "param1"
 
 class TutorialFragment : Fragment() {
 
     private var position: Int? = null
+    private var myContext: Context? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             position = it.getInt(ARG_PARAM1)
         }
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        myContext  = context
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        myContext = null
     }
 
     override fun onCreateView(
@@ -39,12 +52,14 @@ class TutorialFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val anim = AlphaAnimation(0.0f, 1.0f)
-        anim.setDuration(500)
-        anim.setStartOffset(100)
-        anim.setRepeatMode(Animation.REVERSE)
-        anim.setRepeatCount(Animation.INFINITE)
-        textView?.startAnimation(anim)
+        startButton?.setOnClickListener(this::launchMap)
+    }
+
+    fun launchMap(view: View){
+        if(myContext!=null) {
+            val intent = Intent(myContext, MainActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     companion object {

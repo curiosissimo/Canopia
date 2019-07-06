@@ -31,7 +31,7 @@ class DetailActivity : AppCompatActivity() {
         setSupportActionBar(detail_toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Prova", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "Inserito tra i preferiti", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
 
@@ -40,6 +40,9 @@ class DetailActivity : AppCompatActivity() {
         toolbar.title = intent.extras.get("title").toString();
         val f = File(getRealPathFromURI(Uri.parse(intent.extras.get("imageUri").toString())))
         appbar.background = Drawable.createFromPath(f.absolutePath)
+
+        val descriptionDetail = intent.extras.get("description").toString()
+        description.text = descriptionDetail
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar_layout.setOnClickListener(this::clickToolbar)

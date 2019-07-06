@@ -34,6 +34,14 @@
               android:lines="5"
               android:id="@+id/markerDescription"
     />
+
+    <Spinner android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center"
+             android:id="@+id/categories"
+    android:layout_margin="16dp">
+
+    </Spinner>
     <Button
             android:id="@+id/save_marker"
             android:layout_width="wrap_content"

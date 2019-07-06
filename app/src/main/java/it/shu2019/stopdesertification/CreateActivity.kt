@@ -8,24 +8,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
 import android.os.Build.*
-import android.widget.Toast
 import android.R.attr.bitmap
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
-import android.widget.EditText
+import android.util.Log
+import android.widget.*
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_create.view.*
+import kotlinx.android.synthetic.main.activity_create.*
 import java.io.ByteArrayOutputStream
 
 
-class CreateActivity : AppCompatActivity() {
+class CreateActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+
     var fileUri: Uri? = null
+    var category = 0
 
     companion object {
         //image pick code
@@ -36,9 +36,39 @@ class CreateActivity : AppCompatActivity() {
         private val PERMISSION_WRITE_CODE = 1011;
     }
 
+    fun createSpinner(){
+
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.categories_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            categories.adapter = adapter
+        }
+
+        categories.onItemSelectedListener = this
+    }
+
+    override fun onNothingSelected(p0: AdapterView<*>?) {
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+        val string = parent?.getItemAtPosition(position).toString()
+        when(string){
+            "Solutions"-> category=0
+            "Problems"-> category=1
+            "Organization"-> category=2
+            "Users alerts"-> category=3
+            "Fire prevention"-> category=4
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create)
+
+        createSpinner()
 
         val imageView: ImageView = findViewById(R.id.taken_picture)
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_camera_enhance_black_24dp))
@@ -51,10 +81,10 @@ class CreateActivity : AppCompatActivity() {
             output.putExtra("title", titleTxt.text)
             output.putExtra("description", descTxt.text)
             output.putExtra("imageUri", fileUri)
+            output.putExtra("category", category)
             setResult(1, output)
             finish()
         }
-
 
         val takePictureBtn: Button = findViewById(R.id.take_picture)
         takePictureBtn.setOnClickListener {
@@ -173,7 +203,7 @@ class CreateActivity : AppCompatActivity() {
             }
 //            imageView.setImageURI(fileUri)
 //            imageView.setImageBitmap(rotatedBitmap)
-            Picasso.get().load(fileUri).rotate(orientationValue).into(imageView);
+            Picasso.get().load(fileUri).rotate(orientationValue).into(imageView)
 
         } else if (requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK) {
             val imageView: ImageView = findViewById(R.id.taken_picture)

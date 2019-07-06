@@ -1,5 +1,6 @@
 package it.shu2019.stopdesertification
 
+import android.content.Context
 import android.content.Intent
 import android.media.ExifInterface
 import android.net.Uri
@@ -22,19 +23,20 @@ import it.shu2019.stopdesertification.entities.MarkerData
 import it.shu2019.stopdesertification.services.MapService
 import java.util.*
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.cardview.view.*
 
 val list = ArrayList<String>()
-val adapter = Adapter(list)
-
+var context: Context? = null
+var adapter: MainActivity.Adapter? = null
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mMap: GoogleMap? = null
-    private var mapService: MapService? = null
-
+    var mapService: MapService? = null
     val mAuth = FirebaseAuth.getInstance()
     val actionCodeSettings = ActionCodeSettings.newBuilder()
         .setUrl("https://stopdesertification.page.link/4v3Q")
@@ -42,7 +44,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         .setAndroidPackageName(
             "it.shu2019.stopdesertification",
             true,
-            "21")
+            "21"
+        )
         .build()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,12 +53,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //        (supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?)?.let {
 //            it.getMapAsync(this)
 //        }
+        context = this
+        adapter = Adapter(list)
         setContentView(R.layout.activity_main)
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         val currentUser = mAuth.currentUser
-        currentUser?:signIn()
+        currentUser ?: signIn()
         FABClickManager()
 
 //        val listUsers = arrayOf(
@@ -89,7 +94,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap?) {
         mMap = googleMap
-        mapService = MapService(googleMap)
+        mapService = MapService(googleMap,this)
 
 //        mapService?.addBlueMarker(LatLng(22.777170, 90.399452), "Test")
 //        mapService?.addGreenMarker(LatLng(23.777176, 92.399458), "Test");
@@ -116,7 +121,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val fab: View = findViewById(R.id.fab)
         fab.setOnClickListener { _ ->
             val intent = Intent(this, CreateActivity::class.java).apply {
-//                putExtra(EXTRA_MESSAGE, message)
+                //                putExtra(EXTRA_MESSAGE, message)
             }
             startActivityForResult(intent, 1)
         }
@@ -129,31 +134,36 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 data?.extras?.get("title").toString(),
                 data?.extras?.get("description").toString(),
                 data?.extras?.get("imageUri").toString(),
-                mapService?.getLocation()!!
+                mapService?.getLocation()!!,
+                data?.extras?.get("category") as Int
             )
 
             addPicture(data?.extras?.get("imageUri").toString());
 
-            mapService?.addYellowMarker(marker, GoogleMap.OnInfoWindowClickListener {
+            mapService?.addMyMarker(marker, GoogleMap.OnInfoWindowClickListener {
                 var marker: MarkerData? = mapService?.getMarkerById(it.tag.toString())
-                if (marker != null) {
-                    val intent = Intent(this, DetailActivity::class.java).apply {
-                        putExtra("title", marker.title)
-                        putExtra("description", marker.description)
-                        putExtra("imageUri", marker.imageUri)
-                    }
-                    startActivity(intent)
-                }
+                if (marker != null)
+                    startActivity(marker)
             })
         }
     }
 
-    fun addPicture(imageUri: String) {
-        list.add(imageUri)
-        adapter.notifyDataSetChanged()
+    fun startActivity(marker: MarkerData){
+        val intent = Intent(this, DetailActivity::class.java).apply {
+            putExtra("title", marker.title)
+            putExtra("description", marker.description)
+            putExtra("imageUri", marker.imageUri)
+            putExtra("category", marker.category)
+        }
+        startActivity(intent)
     }
 
-    fun signIn(){
+    fun addPicture(imageUri: String) {
+        list.add(imageUri)
+        adapter?.notifyDataSetChanged()
+    }
+
+    fun signIn() {
 
         /*mAuth.createUserWithEmailAndPassword("alestesta50@gmail.com","AAAAAAAAAAAAAA").addOnCompleteListener { task->
             if(task.isSuccessful){
@@ -167,27 +177,43 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mAuth.sendSignInLinkToEmail("alestesta50@gmail.com", actionCodeSettings) //EMAIL PROVA
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.e("SENT","SENT")
-                }
-                else
-                    Log.e("Error",task.exception.toString())
+                    Log.e("SENT", "SENT")
+                } else
+                    Log.e("Error", task.exception.toString())
             }
     }
-}
 
-class Adapter(private val list:ArrayList<String>) : RecyclerView.Adapter<Adapter.Holder>(){
+    inner class Adapter(val list: ArrayList<String>) : RecyclerView.Adapter<Holder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        return Holder(LayoutInflater.from(parent.context).inflate(R.layout.cardview,parent,false))
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+            val holder = Holder(LayoutInflater.from(parent.context).inflate(R.layout.cardview, parent, false))
+            return holder
+        }
+
+        override fun getItemCount(): Int = list?.size
+
+        override fun onBindViewHolder(holder: Holder, position: Int) {
+            holder.view.image.setImageURI(Uri.parse(list.get(position)))
+            holder.view.title.text = mapService?.markers?.get(position)?.title
+            //holder.view.icon.setImageBitmap(mapService?.getBitmap(mapService?.markers?.get(position)!!,84,84))
+            Glide.with(context!!).load(mapService?.getBitmap(mapService?.markers?.get(position)!!,84,84)).into(holder.view.icon)
+        }
+
     }
 
-    override fun getItemCount(): Int = list?.size
+    inner class Holder(val view: View) : RecyclerView.ViewHolder(view) {
 
-    override fun onBindViewHolder(holder: Holder, position: Int) {
+        init {
+            view.setOnClickListener(this::clickOnCardview)
 
-        holder.view.image.setImageURI(Uri.parse(list.get(position)))
+        }
+
+        fun clickOnCardview(view: View) {
+            val itemPosition = recyclerView.getChildLayoutPosition(view)
+            val marker = mapService?.markers?.find { it.imageUri == list[itemPosition] }
+            if(marker!=null)
+                startActivity(marker)
+        }
     }
-
-    class Holder(val view: View) : RecyclerView.ViewHolder(view)
 
 }

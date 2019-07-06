@@ -8,6 +8,7 @@ class MarkerData(
     var title: String,
     var description: String,
     var imageUri: String,
-    var coords: LatLng
+    var coords: LatLng,
+    var category: Int
 ) {
 }

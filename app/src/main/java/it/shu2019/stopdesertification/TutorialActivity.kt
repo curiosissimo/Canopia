@@ -28,7 +28,7 @@ class TutorialActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial)
         viewpager.adapter = TutorialFragmentAdapter(supportFragmentManager)
-        firstCircle.setCardBackgroundColor(Color.RED)
+        firstCircle.setCardBackgroundColor(Color.YELLOW)
         viewpager.addOnPageChangeListener(this)
         firstCircle.setOnClickListener(this::changeFragment)
         secondCircle.setOnClickListener(this::changeFragment)
@@ -60,9 +60,9 @@ class TutorialActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
         secondCircle.setCardBackgroundColor(Color.BLACK)
         thirdCircle.setCardBackgroundColor(Color.BLACK)
         when(position){
-            0->firstCircle.setCardBackgroundColor(Color.RED)
-            1->secondCircle.setCardBackgroundColor(Color.RED)
-            2->thirdCircle.setCardBackgroundColor(Color.RED)
+            0->firstCircle.setCardBackgroundColor(Color.YELLOW)
+            1->secondCircle.setCardBackgroundColor(Color.YELLOW)
+            2->thirdCircle.setCardBackgroundColor(Color.YELLOW)
         }
     }
 
