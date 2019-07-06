@@ -1,38 +1,37 @@
-/*package it.shu2019.stopdesertification
+package it.shu2019.stopdesertification
 
 import android.content.Context
 import android.content.Intent
-import android.media.ExifInterface
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.ImageView
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.ActionCodeSettings
-import com.google.firebase.auth.FirebaseAuth
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.squareup.picasso.Picasso
-import it.shu2019.stopdesertification.entities.MarkerData
-import it.shu2019.stopdesertification.services.MapService
-import java.util.*
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.cardview.widget.CardView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import androidx.core.view.GravityCompat
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.firebase.auth.ActionCodeSettings
+import com.google.firebase.auth.FirebaseAuth
+import it.shu2019.stopdesertification.entities.MarkerData
+import it.shu2019.stopdesertification.services.MapService
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.cardview.view.*
+import java.util.*
 
-/*val list = ArrayList<String>()
+val list = ArrayList<String>()
 var context: Context? = null
-var adapter: MainActivity.Adapter? = null*/
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+var adapter: DrawerActivity.Adapter? = null
+
+class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
     private var mMap: GoogleMap? = null
     var mapService: MapService? = null
     val mAuth = FirebaseAuth.getInstance()
@@ -48,17 +47,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        (supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?)?.let {
-//            it.getMapAsync(this)
-//        }
+        setContentView(R.layout.activity_drawer)
+
+
+
         context = this
         adapter = Adapter(list)
-        setContentView(R.layout.activity_main)
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         val currentUser = mAuth.currentUser
-        currentUser ?: signIn()
         FABClickManager()
 
 //        val listUsers = arrayOf(
@@ -75,60 +73,65 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         recyclerView.adapter = adapter
 
-//        for (i in 0 until listUsers.size){
-//
-//            list.add(listUsers.get(i))
-//
-//            if(listUsers.size - 1 == i){
-//                // init adapter yang telah dibuat tadi
-//                val adapter = Adapter(list)
-//
-//                //tampilkan data dalam recycler view
-//            }
-//
-//        }
 
+
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        val navView: NavigationView = findViewById(R.id.nav_view)
+        val toggle = ActionBarDrawerToggle(
+            this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        )
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        navView.setNavigationItemSelectedListener(this)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId){
-            R.id.help->drawerAppearing()
+    override fun onBackPressed() {
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
         }
-        return super.onOptionsItemSelected(item)
     }
 
-    fun drawerAppearing(){
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.drawer, menu)
+        return true
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        // Handle navigation view item clicks here.
+        when (item.itemId) {
+            R.id.tutorial-> startActivity(Intent(this,TutorialActivity::class.java))
+            R.id.logout-> {
+                finishAndRemoveTask()
+                System.exit(0)
+            }
+        }
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         mMap = googleMap
-        mapService = MapService(googleMap,this)
-
-//        mapService?.addBlueMarker(LatLng(22.777170, 90.399452), "Test")
-//        mapService?.addGreenMarker(LatLng(23.777176, 92.399458), "Test");
-//        mapService?.addRedMarker(LatLng(21.777176, 91.399444), "Test");
-//        mapService?.addYellowMarker(LatLng(26.777168, 93.399452), "Test");
-
-
-//        val cards = findViewById(R.id.cards) as LinearLayout
-//
-//        val view1: CardView = LayoutInflater.from(this).inflate(R.layout.cardview, cards) as CardView
-//        val view2: CardView = LayoutInflater.from(this).inflate(R.layout.cardview, cards) as CardView
-
-
-//        view1.test.text = "Card1"
-//        view1.width
-//        view2.test.text = "Card2"
-
-//        cards.addView(view1)
-//        cards.addView(view2);
-
+        mapService = MapService(googleMap, this)
     }
 
     fun FABClickManager() {
@@ -177,26 +180,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         adapter?.notifyDataSetChanged()
     }
 
-    fun signIn() {
-
-        /*mAuth.createUserWithEmailAndPassword("alestesta50@gmail.com","AAAAAAAAAAAAAA").addOnCompleteListener { task->
-            if(task.isSuccessful){
-                Log.e("isSuccessful","isSuccessful")
-            }
-            else{
-                Log.e("Failed",task.exception.toString())
-            }
-        }*/
-
-        mAuth.sendSignInLinkToEmail("alestesta50@gmail.com", actionCodeSettings) //EMAIL PROVA
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.e("SENT", "SENT")
-                } else
-                    Log.e("Error", task.exception.toString())
-            }
-    }
-
     inner class Adapter(val list: ArrayList<String>) : RecyclerView.Adapter<Holder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -229,5 +212,4 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 startActivity(marker)
         }
     }
-
-}*/
+}

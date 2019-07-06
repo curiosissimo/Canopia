@@ -19,6 +19,11 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat">
         <activity
+                android:name=".DrawerActivity"
+                android:label="@string/title_activity_drawer"
+                android:theme="@style/NoActionBar">
+        </activity>
+        <activity
                 android:name=".SplashActivity"
                 android:configChanges="orientation|keyboardHidden"
                 android:screenOrientation="portrait"

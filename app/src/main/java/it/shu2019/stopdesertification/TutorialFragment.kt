@@ -57,7 +57,7 @@ class TutorialFragment : Fragment() {
 
     fun launchMap(view: View){
         if(myContext!=null) {
-            val intent = Intent(myContext, MainActivity::class.java)
+            val intent = Intent(myContext, DrawerActivity::class.java)
             startActivity(intent)
         }
     }
